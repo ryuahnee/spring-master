@@ -1,4 +1,4 @@
-package com.example.todoapp.core.shared;
+package com.example.todoapp.core.shared.identifier;
 
 import jakarta.persistence.Embeddable;
 

@@ -1,6 +1,6 @@
 package com.example.todoapp.core.shared;
 
-import org.junit.jupiter.api.Assertions;
+import com.example.todoapp.core.shared.identifier.TodoId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

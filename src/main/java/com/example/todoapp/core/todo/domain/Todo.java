@@ -23,7 +23,7 @@ public class Todo implements Serializable{
     private TodoId id;
     private String text;   //내용
     @Embedded
-    @AttributeOverride(name = "value",column = @Column(name="owner_id"))
+    @AttributeOverride(name = "id",column = @Column(name="owner_id"))
     private UserId owner;   //할일 소유자
     private TodoState state;
     private LocalDateTime createdDate;  // 생성일
@@ -37,6 +37,8 @@ public class Todo implements Serializable{
         this.id = id;
         this.text = text;
         this.createdDate = createdDate;
+        this.state = TodoState.ACTIVE;  // ← 추가 필요
+        this.lastModifiedDate = createdDate;  // ← 추가 필요
     }
 
     //매개변수가 있는 생성자 (id, text, owner, createdDate)
@@ -89,7 +91,7 @@ public class Todo implements Serializable{
     //6단계: 비즈니스 메서드 작성
     public boolean isCompleted() {
         // TodoState가 COMPLETED인지 확인하는 로직
-       return getState().isCompleted();
+       return state != null && getState().isCompleted();
     }
 
     public Todo edit(String text, boolean completed) {
@@ -103,12 +105,11 @@ public class Todo implements Serializable{
 
     }
 
-    //todo. IllegalArgumentException 변경 필요
     public Todo edit(String text, boolean completed, UserId owner) {
         // 소유자 검증 후 edit 호출
         // 소유자가 다르면 TodoOwnerMismatchException 발생
         if(!Objects.equals(this.owner, owner)){
-            throw new IllegalArgumentException("소유자가 다릅니다.");
+            throw new TodoOwnerMismatchException("소유자가 다릅니다.");
         }
         return edit(text,completed);
     }
@@ -134,6 +135,13 @@ public class Todo implements Serializable{
 
     @Override
     public String toString() {
-        return this.toString();
+        return "Todo{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", owner=" + owner +
+                ", state=" + state +
+                ", createdDate=" + createdDate +
+                ", lastModifiedDate=" + lastModifiedDate +
+                '}';
     }
 }
